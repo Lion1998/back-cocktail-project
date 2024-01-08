@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 namespace cocktail_project.Controllers
 {
     [ApiController]
-    [Authorize(Policy = "TypeMustAdmin")]
     [Route("[Controller]")]
     public class DeleteController : ControllerBase
     {

@@ -12,18 +12,18 @@ namespace cocktail_project.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    
+
     public class AuthenticationController : ControllerBase
     {
         private IConfiguration myConfing;
         private AuthenticationContexts dbContext;
-        public AuthenticationController(IConfiguration confinguration) 
+        public AuthenticationController(IConfiguration confinguration)
         {
             myConfing = confinguration;
             dbContext = new AuthenticationContexts();
         }
         [HttpPost]
-        public ActionResult Authenticate(Authentication userAuthentication) 
+        public ActionResult Authenticate(Authentication userAuthentication)
         {
             var user = AuthenticateUser(userAuthentication);
             if (user == null)
@@ -43,15 +43,20 @@ namespace cocktail_project.Controllers
             var token = new JwtSecurityToken
                 (
                 myConfing["Authentication:Issuer"],
-                myConfing["Authentication:Audience"], 
+                myConfing["Authentication:Audience"],
                 claims,
                 DateTime.UtcNow,
                 DateTime.UtcNow.AddMinutes(10),
                 creds
                 );
             var result = new JwtSecurityTokenHandler().WriteToken(token);
-            return Ok(result);
-        } 
+            var response = new
+            {
+                token = result,
+                user = user
+            };
+            return Ok(response);
+        }
 
         private Authentication AuthenticateUser(Authentication auth)
         {

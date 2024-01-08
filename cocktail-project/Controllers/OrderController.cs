@@ -26,21 +26,17 @@ namespace cocktail_project.Controllers
             return Ok(orders);
         }
         [HttpPost]
-        public ActionResult InsertOrders([FromBody] Orders newUser)
+        public ActionResult InsertOrders([FromBody] Orders newOrder)
         {
-            if (newUser == null)
+            if (newOrder == null)
             {
                 return BadRequest("Invalid JSON");
             }
 
-            dbContextOrderContexts.Booking.Add(newUser);
+            dbContextOrderContexts.Booking.Add(newOrder);
             dbContextOrderContexts.SaveChanges();
 
-            return CreatedAtAction(
-                "Get",
-                new { id = newUser.ID },
-                newUser
-            );
+            return Ok();
         }
         [HttpGet("AriivalTime")]
         public ActionResult TimeViewing()
