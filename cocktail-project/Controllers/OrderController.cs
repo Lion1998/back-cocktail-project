@@ -1,6 +1,7 @@
 ﻿using cocktail_project.Contexts;
 using cocktail_project.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace cocktail_project.Controllers
 {
@@ -46,7 +47,24 @@ namespace cocktail_project.Controllers
             time = dbContextArrivalTime.ExpectedArrival.ToList();
             return Ok(time);
         }
+        [HttpPut("{id}")]
+        public IActionResult UpdateOrder(int id, [FromBody] Orders updatedOrder)
+        {
+            var existingOrder = dbContextOrderContexts.Booking.FirstOrDefault(o => o.ID == id);
+            if (existingOrder == null)
+            {
+                return NotFound();
+            }
 
+            existingOrder.ExpectedArrivalID = updatedOrder.ExpectedArrivalID;
+            existingOrder.TablesID = updatedOrder.TablesID;
+            existingOrder.Date = updatedOrder.Date;
+
+            dbContextOrderContexts.SaveChanges();
+
+            return NoContent();
+        }
 
     }
+
 }

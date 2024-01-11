@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace cocktail_project.Controllers
 {
+    [ApiController]
     public class PatchController : ControllerBase
     {
         private OrderContexts dbContext;
@@ -38,6 +39,24 @@ namespace cocktail_project.Controllers
             }
             dbContext.SaveChanges();
             _logger.LogInformation($"Oreder {id} is get changes ");
+            return NoContent();
+        }
+        [HttpPut("{id}")]
+            public IActionResult UpdateOrder(int id, [FromBody] Orders updatedOrder)
+        {
+            var existingOrder = dbContext.Booking.FirstOrDefault(o => o.ID == id);
+            if (existingOrder == null)
+            {
+                return NotFound();
+            }
+
+            existingOrder.ExpectedArrivalID = updatedOrder.ExpectedArrivalID;
+            existingOrder.TablesID = updatedOrder.TablesID;
+            existingOrder.Date = updatedOrder.Date;
+
+            dbContext.SaveChanges();
+            _logger.LogInformation($"Order {id} updated successfully");
+
             return NoContent();
         }
     }
